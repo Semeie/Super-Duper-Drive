@@ -20,6 +20,9 @@ class CloudStorageApplicationTests {
 	private int port;
 
 	private WebDriver driver;
+	private WebDriverWait webDriverWait;
+	private NotePage notePage;
+	private CredentialPage credentialPage;
 
 	@BeforeAll
 	static void beforeAll() {
@@ -52,7 +55,7 @@ class CloudStorageApplicationTests {
 		// Create a dummy account for logging in later.
 
 		// Visit the sign-up page.
-		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+		webDriverWait = new WebDriverWait(driver, 2);
 		driver.get("http://localhost:" + this.port + "/signup");
 		webDriverWait.until(ExpectedConditions.titleContains("Sign Up"));
 		
@@ -99,7 +102,7 @@ class CloudStorageApplicationTests {
 	{
 		// Log in to our dummy account.
 		driver.get("http://localhost:" + this.port + "/login");
-		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+		webDriverWait = new WebDriverWait(driver, 2);
 
 		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("inputUsername")));
 		WebElement loginUserName = driver.findElement(By.id("inputUsername"));
@@ -131,10 +134,10 @@ class CloudStorageApplicationTests {
 	 * https://review.udacity.com/#!/rubrics/2724/view 
 	 */
 	@Test
-	public void testRedirection() {
+	public void testRedirection() throws InterruptedException{
 		// Create a test account
 		doMockSignUp("Redirection","Test","RT","123");
-		
+		Thread.sleep(2000);
 		// Check if we have been redirected to the log in page.
 		Assertions.assertEquals("http://localhost:" + this.port + "/login", driver.getCurrentUrl());
 	}
@@ -182,11 +185,11 @@ class CloudStorageApplicationTests {
 		doLogIn("LFT", "123");
 
 		// Try to upload an arbitrary large file
-		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+		webDriverWait = new WebDriverWait(driver, 2);
 		String fileName = "upload5m.zip";
 
-		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("fileUpload")));
-		WebElement fileSelectButton = driver.findElement(By.id("fileUpload"));
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("file")));
+		WebElement fileSelectButton = driver.findElement(By.id("file"));
 		fileSelectButton.sendKeys(new File(fileName).getAbsolutePath());
 
 		WebElement uploadButton = driver.findElement(By.id("uploadButton"));
@@ -199,7 +202,96 @@ class CloudStorageApplicationTests {
 		Assertions.assertFalse(driver.getPageSource().contains("HTTP Status 403 – Forbidden"));
 
 	}
+	public void doLogOut() {
+		WebElement Logout = driver.findElement(By.id("submit-button"));
+		Logout.click();
+	}
+	@Test
+	public void create_edit_delete_notes() throws InterruptedException {
+		doMockSignUp("Note","Test","XYZ","123");
+		doLogIn("XYZ", "123");
+		webDriverWait = new WebDriverWait(driver, 2);
+		notePage = new NotePage(driver);
+	    noteAdd(notePage);
+		noteEdit(notePage);
+		noteDelete(notePage);
+	    doLogOut();
+	    webDriverWait.until(ExpectedConditions.titleContains("Login"));
+	    Assertions.assertEquals("You have been logged out", driver.findElement(By.id("logout")).getText());
+	}
+	private void noteAdd(NotePage notePage) throws InterruptedException {
 
+		Thread.sleep(2000);
+		notePage.noteTab.click();
+		Thread.sleep(2000);
+		notePage.addNoteButton.click();
+		Thread.sleep(2000);
+		notePage.postNote("Note Title", "Note Description");
+		notePage.noteSubmit.click();
+
+	}
+
+	private void noteEdit(NotePage notePage) throws InterruptedException {
+
+		Thread.sleep(2000);
+		notePage.noteTab.click();
+		Thread.sleep(2000);
+		notePage.noteEdit.click();
+		Thread.sleep(2000);
+		notePage.postNote("Edit Note Title", "Edit Note Description");
+		notePage.noteSubmit.click();
+
+
+	}
+
+	private void noteDelete(NotePage notePage) throws InterruptedException {
+
+		Thread.sleep(2000);
+		notePage.noteDelete.click();
+		Thread.sleep(2000);
+
+	}
+	@Test
+	public void create_edit_delete_credentials() throws InterruptedException {
+		doMockSignUp("Credential","Test","ABC","123");
+		doLogIn("ABC", "123");
+		webDriverWait = new WebDriverWait(driver, 2);
+		credentialPage = new CredentialPage(driver);
+		credentialAdd(credentialPage);
+		credentialEdit(credentialPage);
+		credentialDelete(credentialPage);
+		doLogOut();
+		webDriverWait.until(ExpectedConditions.titleContains("Login"));
+		Assertions.assertEquals("You have been logged out", driver.findElement(By.id("logout")).getText());
+	}
+	private void credentialAdd(CredentialPage credentialPage) throws InterruptedException {
+		Thread.sleep(2000);
+		credentialPage.navCredential.click();
+		Thread.sleep(2000);
+		credentialPage.addCredential.click();
+		Thread.sleep(2000);
+		credentialPage.credentialNote("https://www.youtube.com", "User", "abc123");
+		credentialPage.credentialSave.click();
+	}
+
+	private void credentialEdit(CredentialPage credentialPage) throws InterruptedException {
+		Thread.sleep(2000);
+		credentialPage.navCredential.click();
+
+		Thread.sleep(2000);
+		credentialPage.credentialEdit.click();
+		Thread.sleep(2000);
+		credentialPage.credentialNote("https://www.udacity.com", "Student", "987654321");
+		credentialPage.credentialSave.click();
+	}
+
+	private void credentialDelete(CredentialPage credentialPage) throws InterruptedException {
+
+		Thread.sleep(2000);
+		credentialPage.credentialDelete.click();
+		Thread.sleep(2000);
+
+	}
 
 
 }

@@ -11,15 +11,13 @@
 <body class="p-3 mb-2 bg-light text-black">
 
 <div class="container">
-    <div th:if="${message}">
-        <h4 th:text="${message}"/>
-    </div>
     <div id="logoutDiv">
         <form action="#" th:action="@{/logout}" method="POST">
             <button type="submit" class="btn btn-secondary float-right" id="submit-button">Logout</button>
         </form>
     </div>
     <div id="contentDiv" style="clear: right;">
+        <div th:replace="/result"></div>
         <nav style="clear: right;">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <a class="nav-item nav-link " th:classappend="${#strings.equals(activeTab, 'files') ? 'active' : ''}"
@@ -46,11 +44,8 @@
                             </div>
 
                             <div class="col-sm-4">
-                                <button type="submit" class="btn btn-dark">Upload</button>
+                                <button type="submit" class="btn btn-dark" id="uploadButton">Upload</button>
                             </div>
-                        </div>
-                        <div id ="error-msg" th:if = "${fileSizeError}" class="alert alert-danger">
-                            <span th:text = "${fileSizeError}"></span>
                         </div>
                     </div>
                 </form>

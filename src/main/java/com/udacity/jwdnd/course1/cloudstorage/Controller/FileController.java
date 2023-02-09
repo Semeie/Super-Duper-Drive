@@ -39,23 +39,22 @@ public class FileController {
 
             if (file.isEmpty()) {
                 message = "Please select a file!";
+                model.addAttribute("errorMessage",message);
                 throw new IOException("File Not FoundException");
             }
 
             if (file.getSize() > 100000000) {
                 message = "File size larger than size limit";
-                model.addAttribute("fileSizeError","File size larger than size limit");
+                model.addAttribute("errorMessage",message);
                 throw new IOException("Error: File size larger than size limit");
             }
 
             if (this.fileService.getFileByFileName(file.getOriginalFilename()) != null) {
-                message = file.getOriginalFilename() + " exists in the database!!! Please upload another file!";
+                message = "File name already exists!!! Please upload another file!";
+                model.addAttribute("errorMessage",message);
                 throw new IOException("File name exists");
             }
-
-
-            // Converting MultipartFile this projects File
-
+            // Converting MultipartFile this project File
             file1.setFileName(file.getOriginalFilename());
             file1.setContentType(file.getContentType());
             file1.setFileSize(file.getSize());
@@ -63,10 +62,11 @@ public class FileController {
             file1.setUserId(userId);
             this.fileService.upLoad(file1);
             message = "You successfully uploaded '" + file1.getFileName() + "' !";
+            model.addAttribute("success",message);
         } catch (IOException e) {
         }
 
-        homeController.addAttributes(model,userId,"files",message);
+        homeController.addAttributes(model,userId,"files");
         return "home";
     }
 
@@ -77,7 +77,7 @@ public class FileController {
 
         Integer userId = userService.getUserByName(authentication.getName()).getUserId();
 
-        homeController.addAttributes(model, userId,"files",message);
+        homeController.addAttributes(model, userId,"files");
 
         File file = fileService.getFile(fileId);
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(file.getContentType()))
@@ -94,10 +94,12 @@ public class FileController {
 
         if (result >= 1) {
             message = "File successfully deleted!";
+            model.addAttribute("success",message);
         } else {
-           message = "Deleting the File was unsuccessfully!";
+           message = "Deleting the file was unsuccessfully!";
+           model.addAttribute("errorMessage", message);
         }
-        homeController.addAttributes(model, userId,"files",message);
-        return "redirect:/home";
+        homeController.addAttributes(model, userId,"files");
+        return "home";
     }
 }

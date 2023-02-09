@@ -37,10 +37,6 @@ public class FileService {
         fileMapper.uploadFile(file);
     }
 
-    public File getFileById(Integer fileId) {
-        return fileMapper.getByFile(fileId);
-    }
-
     public int delete(Integer fileId) {
         return fileMapper.delete(fileId);
     }

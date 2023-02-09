@@ -27,17 +27,17 @@ public class HomeController {
     @GetMapping
     public String getHomePage(Model model, Authentication authentication) {
         Integer userId = userService.getUserByName(authentication.getName()).getUserId();
-        addAttributes(model,userId,"files","HOME PAGE");
+        addAttributes(model,userId,"files");
         return  "home";
+
     }
 
-    public void addAttributes(Model model, Integer userId,String activeTab,String message) {
+    public void addAttributes(Model model, Integer userId,String activeTab) {
 
         model.addAttribute("credentials",this.credentialService.findAllCred(userId));
         model.addAttribute("files",this.fileService.findAllFiles(userId));
         model.addAttribute("notes", this.noteService.findAllNotes(userId));
         model.addAttribute("encryptionService", encryptionService);
         model.addAttribute("activeTab", activeTab);
-        model.addAttribute("message", message);
     }
 }

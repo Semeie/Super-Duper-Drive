@@ -14,7 +14,7 @@ public class CredentialController {
     private CredentialService credentialService;
     private UserService userService;
     private HomeController homeController;
-    private String message="Credentials List";
+    private String message;
 
     public CredentialController(CredentialService credentialService, UserService userService, HomeController homeController) {
         this.credentialService = credentialService;
@@ -32,7 +32,8 @@ public class CredentialController {
         }
         this.credentialService.addCredential(credential);
         message = "Credential"+" successfully "+ HomeController.status +" !";
-        homeController.addAttributes(model,userId,"credentials",message);
+        model.addAttribute("success", message);
+        homeController.addAttributes(model,userId,"credentials");
 
         return "home";
     }
@@ -51,10 +52,12 @@ public class CredentialController {
 
         if (result >= 1) {
             message="Credential successfully deleted!";
+            model.addAttribute("success", message);
         } else {
             message="Deleting the Credential was unsuccessfully!";
+            model.addAttribute("errorMessage",message);
         }
-        homeController.addAttributes(model,userId,"credentials",message);
+        homeController.addAttributes(model,userId,"credentials");
         return "home";
     }
 }

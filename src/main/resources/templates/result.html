@@ -9,16 +9,15 @@
         <title>Result</title>
     </head>
     <body class="p-3 mb-2 bg-light text-black">
-        <div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">
-            <div th:if="${param.success}"class="alert alert-success fill-parent">
-                <h1 class="display-5" >Success</h1>
-                <span>Your changes were successfully saved. Click <a class="continue-link" th:href="@{/home}" >here</a> to continue.</span>
-            </div>
-            <div th:if="${param.error}" class="alert alert-danger fill-parent">
-                <h1 class="display-5">Error</h1>
-                <span th:text="${error}">Your change were not saved.</span>
-                <span>Click <a  th:href="@{/home} class="continue-link ></a> to continue.</span>
-            </div>
+    <div class="container" style="margin-top: 5em;" id="message">
+        <div th:if="${success} != null" class="alert alert-success fill-parent">
+            <h7 class="col-sm-6" id="success">Success:</h7>
+            <span th:text="${success}">Your changes were successfully saved.</span>
         </div>
+        <div th:if="${errorMessage} != null" class="alert alert-danger fill-parent">
+            <h7 class="col-sm-6" id="error">Error:</h7>
+            <span th:text="${errorMessage}">Example Error Message</span>
+        </div>
+    </div>
     </body>
 </html>

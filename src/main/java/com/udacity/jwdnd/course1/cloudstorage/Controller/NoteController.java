@@ -14,7 +14,7 @@ public class NoteController {
     private UserService userService;
     private NoteService noteService;
     private HomeController homeController;
-    private String message = "Notes List";
+    private String message;
 
     public NoteController(UserService userService, NoteService noteService, HomeController homeController) {
         this.userService = userService;
@@ -29,8 +29,9 @@ public class NoteController {
         Integer userId = userService.getUserByName(authentication.getName()).getUserId();
         note.setUserId(userId);
         this.noteService.addNote(note);
-        message="Note "  +" successfully "+ HomeController.status +" !";
-        homeController.addAttributes(model,userId,"notes",message);
+        message= "Note successfully "+ HomeController.status +" !";
+        model.addAttribute("success", message);
+        homeController.addAttributes(model,userId,"notes");
 
         return "home";
     }
@@ -45,10 +46,12 @@ public class NoteController {
 
         if (result >= 1) {
             message= "Note successfully deleted !";
+            model.addAttribute("success",message);
         } else {
             message="Deleting the Note was unsuccessfully !";
+            model.addAttribute("errorMessage", message);
         }
-        homeController.addAttributes(model,userId,"notes",message);
+        homeController.addAttributes(model,userId,"notes");
 
         return "home";
     }
