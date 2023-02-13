@@ -25,13 +25,12 @@ class CloudStorageApplicationTests {
 	private CredentialPage credentialPage;
 
 	@BeforeAll
-	static void beforeAll() {
-		WebDriverManager.chromedriver().setup();
-	}
+	static void beforeAll() {WebDriverManager.chromedriver().setup();}
 
 	@BeforeEach
 	public void beforeEach() {
 		this.driver = new ChromeDriver();
+		driver.manage().window().maximize();
 	}
 
 	@AfterEach
@@ -89,7 +88,9 @@ class CloudStorageApplicationTests {
 		// You may have to modify the element "success-msg" and the sign-up 
 		// success message below depend ing on the rest of your code.
 		*/
-		Assertions.assertTrue(driver.findElement(By.id("success-msg")).getText().contains("You successfully signed up!"));
+		webDriverWait.until(ExpectedConditions.titleContains("Login"));
+		Assertions.assertEquals("Login", driver.getTitle());
+//		Assertions.assertTrue(driver.findElement(By.id("success-msg")).getText().contains("You successfully signed up!"));
 	}
 
 	
@@ -270,7 +271,7 @@ class CloudStorageApplicationTests {
 		Thread.sleep(2000);
 		credentialPage.addCredential.click();
 		Thread.sleep(2000);
-		credentialPage.credentialNote("https://www.youtube.com", "User", "abc123");
+		credentialPage.credentialNote("https://www.google.com", "User", "abc123");
 		credentialPage.credentialSave.click();
 	}
 
@@ -281,7 +282,7 @@ class CloudStorageApplicationTests {
 		Thread.sleep(2000);
 		credentialPage.credentialEdit.click();
 		Thread.sleep(2000);
-		credentialPage.credentialNote("https://www.udacity.com", "Student", "987654321");
+		credentialPage.credentialNote("https://www.youtube.com", "username", "987654321");
 		credentialPage.credentialSave.click();
 	}
 
@@ -292,6 +293,7 @@ class CloudStorageApplicationTests {
 		Thread.sleep(2000);
 
 	}
+
 
 
 }

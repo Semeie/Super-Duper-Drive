@@ -3,13 +3,14 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 import com.udacity.jwdnd.course1.cloudstorage.Mapper.FileMapper;
 import com.udacity.jwdnd.course1.cloudstorage.Model.File;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Service
 public class FileService {
-    private FileMapper fileMapper;
+    private final FileMapper fileMapper;
 
     public FileService(FileMapper fileMapper) {
         this.fileMapper = fileMapper;
@@ -33,8 +34,7 @@ public class FileService {
         return fileMapper.getFileByFileName(fileName);
     }
 
-    public void upLoad(File file ){
-        fileMapper.uploadFile(file);
+    public void upLoad(File file){ fileMapper.uploadFile(file);
     }
 
     public int delete(Integer fileId) {

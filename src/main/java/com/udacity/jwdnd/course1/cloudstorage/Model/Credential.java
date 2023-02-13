@@ -65,15 +65,4 @@ public class Credential {
         this.userId = userId;
     }
 
-    @Override
-    public String toString() {
-        return "Credential{" +
-                "credentialId=" + credentialId +
-                ", url='" + url + '\'' +
-                ", username='" + username + '\'' +
-                ", key='" + key + '\'' +
-                ", password='" + password + '\'' +
-                ", userId=" + userId +
-                '}';
-    }
 }

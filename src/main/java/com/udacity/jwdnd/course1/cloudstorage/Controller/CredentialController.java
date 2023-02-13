@@ -1,5 +1,4 @@
 package com.udacity.jwdnd.course1.cloudstorage.Controller;
-
 import com.udacity.jwdnd.course1.cloudstorage.Model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
@@ -8,13 +7,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import static com.udacity.jwdnd.course1.cloudstorage.Utils.Constants.ERROR_CREDENTIAL_DELETE;
+import static com.udacity.jwdnd.course1.cloudstorage.Utils.Constants.SUCCESS_CREDENTIAL_DELETE;
+
 @Controller
 @RequestMapping("/home/credential")
 public class CredentialController {
     private CredentialService credentialService;
     private UserService userService;
     private HomeController homeController;
-    private String message;
 
     public CredentialController(CredentialService credentialService, UserService userService, HomeController homeController) {
         this.credentialService = credentialService;
@@ -31,8 +32,8 @@ public class CredentialController {
             credential.setUserId(userId);
         }
         this.credentialService.addCredential(credential);
-        message = "Credential"+" successfully "+ HomeController.status +" !";
-        model.addAttribute("success", message);
+        String msg = "Credential successfully "+ HomeController.status +" !";
+        model.addAttribute("success", msg);
         homeController.addAttributes(model,userId,"credentials");
 
         return "home";
@@ -40,22 +41,20 @@ public class CredentialController {
 
     @GetMapping("/{credentialId}")
     @ResponseBody
-    public Credential getCredential(Authentication authentication,@PathVariable(name = "credentialId") String credentialID ) {
+    public Credential getCredential(Authentication authentication,@PathVariable("credentialId") String credentialID ) {
         Integer credentialId = Integer.parseInt(credentialID);
         return credentialService.getCredential(credentialId);
     }
 
     @GetMapping("/delete/{credentialId}")
-    public String deleteNote(Authentication authentication, @PathVariable Integer credentialId, Model model) {
+    public String deleteCredential(Authentication authentication, @PathVariable Integer credentialId, Model model) {
         Integer userId = userService.getUserByName(authentication.getName()).getUserId();
-        int result = credentialService.delete(credentialId);
+        int deletedCredential = credentialService.delete(credentialId);
 
-        if (result >= 1) {
-            message="Credential successfully deleted!";
-            model.addAttribute("success", message);
+        if (deletedCredential >= 1) {
+            model.addAttribute("success", SUCCESS_CREDENTIAL_DELETE);
         } else {
-            message="Deleting the Credential was unsuccessfully!";
-            model.addAttribute("errorMessage",message);
+            model.addAttribute("errorMsg",ERROR_CREDENTIAL_DELETE);
         }
         homeController.addAttributes(model,userId,"credentials");
         return "home";

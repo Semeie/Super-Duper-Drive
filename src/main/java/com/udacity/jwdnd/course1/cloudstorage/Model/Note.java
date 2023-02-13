@@ -37,14 +37,4 @@ public class Note {
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
-
-    @Override
-    public String toString() {
-        return "Note{" +
-                "noteId=" + noteId +
-                ", noteTitle='" + noteTitle + '\'' +
-                ", noteDescription='" + noteDescription + '\'' +
-                ", userId=" + userId +
-                '}';
-    }
 }

@@ -8,13 +8,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import static com.udacity.jwdnd.course1.cloudstorage.Utils.Constants.ERROR_NOTE_DELETE;
+import static com.udacity.jwdnd.course1.cloudstorage.Utils.Constants.SUCCESS_NOTE_DELETE;
+
 @Controller
 @RequestMapping("/home/note")
 public class NoteController {
     private UserService userService;
     private NoteService noteService;
     private HomeController homeController;
-    private String message;
 
     public NoteController(UserService userService, NoteService noteService, HomeController homeController) {
         this.userService = userService;
@@ -29,8 +31,8 @@ public class NoteController {
         Integer userId = userService.getUserByName(authentication.getName()).getUserId();
         note.setUserId(userId);
         this.noteService.addNote(note);
-        message= "Note successfully "+ HomeController.status +" !";
-        model.addAttribute("success", message);
+        String msg = "Note successfully "+ HomeController.status +" !";
+        model.addAttribute("success", msg);
         homeController.addAttributes(model,userId,"notes");
 
         return "home";
@@ -42,14 +44,12 @@ public class NoteController {
 
 
         Integer userId = userService.getUserByName(authentication.getName()).getUserId();
-        int result = noteService.delete(noteId);
+        int deletedNote = noteService.delete(noteId);
 
-        if (result >= 1) {
-            message= "Note successfully deleted !";
-            model.addAttribute("success",message);
+        if (deletedNote >= 1) {
+            model.addAttribute("success",SUCCESS_NOTE_DELETE);
         } else {
-            message="Deleting the Note was unsuccessfully !";
-            model.addAttribute("errorMessage", message);
+            model.addAttribute("errorMsg", ERROR_NOTE_DELETE);
         }
         homeController.addAttributes(model,userId,"notes");
 

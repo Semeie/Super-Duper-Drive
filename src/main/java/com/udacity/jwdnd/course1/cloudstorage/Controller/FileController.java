@@ -3,6 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.Controller;
 import com.udacity.jwdnd.course1.cloudstorage.Model.File;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +15,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.SQLException;
+
+import static com.udacity.jwdnd.course1.cloudstorage.Utils.Constants.*;
+
 @Controller
 @RequestMapping("/home/files")
 public class FileController {
     private UserService userService;
     private FileService fileService;
     private HomeController homeController;
-    private String message;
-
 
     public FileController(UserService userService, FileService fileService, HomeController homeController) {
         this.userService = userService;
@@ -30,7 +32,7 @@ public class FileController {
     }
 
     @PostMapping
-    public String upload(Authentication authentication, MultipartFile file, @ModelAttribute("files") File file1, Model model) {
+    public String uploadFile(Authentication authentication, MultipartFile file, @ModelAttribute("files") File fileX, Model model) {
 
         Integer userId = userService.getUserByName(authentication.getName()).getUserId();
 
@@ -38,31 +40,28 @@ public class FileController {
         try {
 
             if (file.isEmpty()) {
-                message = "Please select a file!";
-                model.addAttribute("errorMessage",message);
-                throw new IOException("File Not FoundException");
+                model.addAttribute("errorMsg",ERROR_FILE_EMPTY);
+                throw new IOException(ERROR_FILE_EXCEPTION);
             }
 
             if (file.getSize() > 100000000) {
-                message = "File size larger than size limit";
-                model.addAttribute("errorMessage",message);
-                throw new IOException("Error: File size larger than size limit");
+                model.addAttribute("errorMsg",ERROR_FILE_SIZE);
+                throw new IOException(ERROR_FILE_SIZE);
             }
 
             if (this.fileService.getFileByFileName(file.getOriginalFilename()) != null) {
-                message = "File name already exists!!! Please upload another file!";
-                model.addAttribute("errorMessage",message);
-                throw new IOException("File name exists");
+                model.addAttribute("errorMsg",ERROR_FILE_ALREADY_EXISTS);
+                throw new IOException(ERROR_FILE_ALREADY_EXISTS);
             }
-            // Converting MultipartFile this project File
-            file1.setFileName(file.getOriginalFilename());
-            file1.setContentType(file.getContentType());
-            file1.setFileSize(file.getSize());
-            file1.setFileData(file.getBytes());
-            file1.setUserId(userId);
-            this.fileService.upLoad(file1);
-            message = "You successfully uploaded '" + file1.getFileName() + "' !";
-            model.addAttribute("success",message);
+            // Convert MultipartFile to this project File
+            fileX.setFileName(file.getOriginalFilename());
+            fileX.setContentType(file.getContentType());
+            fileX.setFileSize(file.getSize());
+            fileX.setFileData(file.getBytes());
+            fileX.setUserId(userId);
+            this.fileService.upLoad(fileX);
+//            String msg = "You successfully uploaded '" + fileX.getFileName() + "' !";
+            model.addAttribute("success",SUCCESS_FILE_UPLOAD);
         } catch (IOException e) {
         }
 
@@ -72,7 +71,7 @@ public class FileController {
 
 
     @RequestMapping("/view/{fileId}")
-    public ResponseEntity downloadFile(Authentication authentication, @PathVariable("fileId") Integer fileId, Model model) throws SQLException {
+    public ResponseEntity<ByteArrayResource> downloadFile(Authentication authentication, @PathVariable("fileId") Integer fileId, Model model) throws SQLException {
 
 
         Integer userId = userService.getUserByName(authentication.getName()).getUserId();
@@ -82,7 +81,7 @@ public class FileController {
         File file = fileService.getFile(fileId);
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(file.getContentType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
-                .body(file.getFileData());
+                .body(new ByteArrayResource(file.getFileData()));
     }
 
 
@@ -90,14 +89,12 @@ public class FileController {
     public String deleteFile(Authentication authentication, @PathVariable Integer fileId, Model model) {
 
         Integer userId = userService.getUserByName(authentication.getName()).getUserId();
-        int result = fileService.delete(fileId);
+        int deletedFile = fileService.delete(fileId);
 
-        if (result >= 1) {
-            message = "File successfully deleted!";
-            model.addAttribute("success",message);
+        if (deletedFile >= 1) {
+            model.addAttribute("success",SUCCESS_FILE_DELETE);
         } else {
-           message = "Deleting the file was unsuccessfully!";
-           model.addAttribute("errorMessage", message);
+           model.addAttribute("errorMsg", ERROR_FILE_DELETE);
         }
         homeController.addAttributes(model, userId,"files");
         return "home";

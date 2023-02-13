@@ -18,7 +18,7 @@
             <form action="#" th:action = "@{/signup}" method="POST">
                 <div id="success-msg" th:if = "${signupSuccess}" class="alert alert-success">
                     You successfully signed up!
-                    <meta http-equiv="refresh" content="1; URL=/login"/>
+<!--                    <meta http-equiv="refresh" content="1; URL=/login"/>-->
                 </div>
                 <div id ="error-msg" th:if = "${signupError}" class="alert alert-danger">
                     <span th:text ="${signupError}"></span>

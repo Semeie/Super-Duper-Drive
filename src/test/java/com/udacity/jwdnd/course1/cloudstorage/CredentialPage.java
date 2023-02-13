@@ -44,6 +44,19 @@ public class CredentialPage {
         credentialUsername.sendKeys(userName);
         credentialPassword.sendKeys(password);
     }
-
+//    public boolean checkCredentialPresent(String url, String userName, String password){
+//        List<WebElement> webElementList=credentialTable.findElements(By.tagName("th"));
+//        boolean credentialPresent=false;
+//
+//        if(webElementList.size()>=5){
+//            WebElement thTitleName=webElementList.get(4);
+//            //The innerHTML is an attribute of a WebElement which is equal to the content that is present between the starting and ending tag.
+//            String urlforCred= thTitleName.getAttribute("innerHTML");
+//            List<WebElement> credentialTableElements=credentialTable.findElements(By.tagName("td"));
+//            String username=credentialTableElements.get(1).getAttribute("innerHTML");
+//            credentialPresent = urlforCred.equals(url)&&username.equals(userName);//&&password1.equals(password);
+//        }
+//        return credentialPresent;
+//    }
 
 }

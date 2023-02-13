@@ -25,7 +25,7 @@ public class CredentialService {
     }
 
     public Credential getCredential(Integer credentialId) {
-        Credential credential = (Credential) credentialMapper.getCreById(credentialId);
+        Credential credential = credentialMapper.getCreById(credentialId);
         String encryptedPassword = credential.getPassword();
         String key = credential.getKey();
         String plainTextPassword = encryptionService.decryptValue(encryptedPassword, key);
@@ -50,7 +50,6 @@ public class CredentialService {
             HomeController.status = "updated";
             return credentialMapper.update(credential);
         }
-
     }
 
     public List<Credential> findAllCred(int userId) {
@@ -65,7 +64,4 @@ public class CredentialService {
         return credentialMapper.delete(credentialId);
     }
 
-    public String getDecryptedCredentials(Integer credentialId) {
-        String decryptedPassword = credentialMapper.getDecryptedPassword(credentialId);
-        return decryptedPassword;}
 }

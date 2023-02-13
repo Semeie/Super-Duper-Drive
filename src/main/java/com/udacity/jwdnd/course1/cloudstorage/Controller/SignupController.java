@@ -9,6 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import static com.udacity.jwdnd.course1.cloudstorage.Utils.Constants.ERROR_SIGNUP_GENERAL;
+import static com.udacity.jwdnd.course1.cloudstorage.Utils.Constants.ERROR_SIGNUP_USERNAME_ALREADY_EXISTS;
 
 @Controller()
 @RequestMapping("/signup")
@@ -29,18 +33,20 @@ public class SignupController {
         String signupError = null;
 
         if (!userService.isUsernameAvailable(user.getUsername())) {
-            signupError = "The username already exists.";
+            signupError = ERROR_SIGNUP_USERNAME_ALREADY_EXISTS;
         }
 
         if (signupError == null) {
             int rowsAdded = userService.createUser(user);
             if (rowsAdded < 0) {
-                signupError = "There was an error signing you up. Please try again.";
+                signupError = ERROR_SIGNUP_GENERAL;
             }
         }
 
         if (signupError == null) {
-            model.addAttribute("signupSuccess", true);
+            model.addAttribute("signupSuccess",true);
+            return "login";
+//            return "redirect:/login";
         } else {
             model.addAttribute("signupError", signupError);
         }

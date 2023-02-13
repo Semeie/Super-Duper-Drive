@@ -25,17 +25,16 @@ public class NoteService {
         return noteMapper.findByUser(userId);
     }
 
-    public void addNote(Note note){
+    public void addNote(Note note) {
 
-        if(note.getNoteId()==null){
+        if (note.getNoteId() == null) {
             HomeController.status = "added";
             noteMapper.addNote(note);
-        }else {
+        } else {
             HomeController.status = "updated";
             noteMapper.update(note);
         }
     }
-
 
     public int delete(Integer noteId){
         return noteMapper.delete(noteId);
