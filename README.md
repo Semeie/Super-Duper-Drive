@@ -127,3 +127,35 @@ You aren't required to understand hashing or encryption and that's why your tech
 [Encryption](https://en.wikipedia.org/wiki/Encryption)
 
 All of us here at Super*Duper*Drive wish you good luck with the project!
+
+## Screenshots
+<details>
+<summary>Click here to show the screenshots of project</summary>
+ <br>
+ <p> SignUp page </p>
+ <img src ="Screenshots/SignUp page.png">
+ <p> Login Page </p>
+ <img src ="Screenshots/Login Page.png">
+ <p> Login Error </p>
+ <img src ="Screenshots/Login Error.png">
+  <p> Login Success </p>
+ <img src ="Screenshots/Login Success.png">
+  <p> FileUpload Error </p>
+ <img src ="Screenshots/FileUpload Error.png">
+  <p> File Page </p>
+ <img src ="Screenshots/File Page.png">
+  <p> Note Table </p>
+ <img src ="Screenshots/Note Table.png">
+  <p> Note Page </p>
+ <img src ="Screenshots/Note Page.png">
+  <p> Credential Table </p>
+ <img src ="Screenshots/Credential Table.png">
+  <p> Credential Page </p>
+ <img src ="Screenshots/Credential Page.png">
+   <p> Logout Page </p>
+ <img src ="Screenshots/Logout Page.png">
+   <p> Selenium testing </p>
+ <img src ="Screenshots/Selenium.gif">
+   <p> all test passed </p>
+ <img src ="Screenshots/all test passed.png">
+</details>
